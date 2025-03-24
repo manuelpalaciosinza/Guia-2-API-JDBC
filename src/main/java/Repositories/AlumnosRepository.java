@@ -8,6 +8,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class AlumnosRepository implements Repository<AlumnosEntity> {
@@ -83,13 +85,61 @@ public class AlumnosRepository implements Repository<AlumnosEntity> {
         try (Connection connection = ConexionSQLITE.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement(
                 "SELECT COUNT(*) FROM alumnos")){
+            ResultSet resultSet = preparedStatement.executeQuery();
+                resultSet.next();
+                return resultSet.getInt(1);
+            }
+        }
+
+    @Override
+    public ArrayList<AlumnosEntity> findAll() throws SQLException {
+        ArrayList <AlumnosEntity> listaAlumnos = new ArrayList<AlumnosEntity>();
+        try (Connection connection = ConexionSQLITE.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(
+                "SELECT id,nombre,apellido,edad,email FROM alumnos")){
             try (ResultSet resultSet = preparedStatement.executeQuery()){
-                if(resultSet.next()){
+                while (resultSet.next()) {
+                    AlumnosEntity alumno = new AlumnosEntity();
+                    alumno.setId(resultSet.getInt("id"));
+                    alumno.setNombre(resultSet.getString("nombre"));
+                    alumno.setApellido(resultSet.getString("apellido"));
+                    alumno.setEdad(resultSet.getInt("edad"));
+                    alumno.setEmail(resultSet.getString("email"));
+
+                    listaAlumnos.add(alumno); // Agregar el alumno a la lista
+                }
+            }
+        }
+        return listaAlumnos; ///Retorno la lista completa
+    }
+
+    public int countById(int id) throws SQLException {
+        ///Metodo que me deja hacer verificaciones para saber si ya hay alumnos con un id
+        try (Connection connection = ConexionSQLITE.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "SELECT COUNT(*) FROM alumnos WHERE id = ?")){
+            preparedStatement.setInt(1,id);
+            try (ResultSet resultSet = preparedStatement.executeQuery()){
+                if(resultSet.next())
+                {
                     return resultSet.getInt(1);
                 }
-                else {
-                    return 0;
+                else return 0;
+            }
+        }
+    }
+    public int countByEmail(String email) throws SQLException {
+        ///Metodo que me deja hacer verificaciones para saber si ya hay alumnos con un email
+        try (Connection connection = ConexionSQLITE.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "SELECT COUNT(*) FROM alumnos WHERE email = ?")){
+            preparedStatement.setString(1,email);
+            try (ResultSet resultSet = preparedStatement.executeQuery()){
+                if(resultSet.next())
+                {
+                    return resultSet.getInt(1);
                 }
+                else return 0;
             }
         }
     }
@@ -103,4 +153,5 @@ public class AlumnosRepository implements Repository<AlumnosEntity> {
             preparedStatement.executeUpdate();
         }
     }
+
 }
