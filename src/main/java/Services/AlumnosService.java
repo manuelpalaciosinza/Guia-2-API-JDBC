@@ -57,4 +57,11 @@ public class AlumnosService {
         }
         alumnosRepository.updateAge(idAlumno,nuevaEdad);
     }
+    public String verAlumnoPorId (int id) throws  SQLException{
+        AlumnosEntity alumnosEntity = alumnosRepository.findById(id).orElse(new AlumnosEntity());
+        alumnosEntity.setDirecciones(direccionesRepository.findByIdAlumno(id));
+        StringBuilder mensaje = new StringBuilder("\nAlumno: ");
+        mensaje.append(alumnosEntity.toString());
+        return mensaje.toString();
+    }
 }
