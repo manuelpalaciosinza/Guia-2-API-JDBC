@@ -34,11 +34,13 @@ public class AlumnosService {
         alumnosRepository.save(alumno);
     }
 
-    public void eliminarAlumno (AlumnosEntity alumno) throws SQLException{
-        if (alumnosRepository.countById(alumno.getId()) == 0){
+    public void eliminarAlumno (int id_alumno) throws SQLException{
+        if (alumnosRepository.countById(id_alumno) == 0){
             throw new SQLException("El alumno ingresado no existe en la base de datos");
         }
-        alumnosRepository.delete(alumno);
+        alumnosRepository.deleteById(id_alumno);
+        direccionesRepository.deleteByIdAlumno(id_alumno); //Aseguro que no queden registros huerfanos
+
     }
     public String listarAlumnosConDirecciones ()throws SQLException{
         StringBuilder lista = new StringBuilder("Listado de Alumnos: ");
@@ -48,5 +50,11 @@ public class AlumnosService {
             lista.append(alumno.toString());
         }
         return lista.toString();
+    }
+    public void modificarEdad(int idAlumno, int nuevaEdad) throws SQLException{
+        if (alumnosRepository.countById(idAlumno) == 0){
+            throw new SQLException("No existe ningun alumno registrado con esa id");
+        }
+        alumnosRepository.updateAge(idAlumno,nuevaEdad);
     }
 }

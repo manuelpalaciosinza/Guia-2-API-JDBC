@@ -61,16 +61,6 @@ public class AlumnosRepository implements Repository<AlumnosEntity> {
     }
 
     @Override
-    public void delete(AlumnosEntity alumnosEntity) throws SQLException {
-        try (Connection connection = ConexionSQLITE.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(
-                "DELETE FROM alumnos WHERE id = ?")){
-            preparedStatement.setInt(1,alumnosEntity.getId());
-            preparedStatement.executeUpdate();
-        }
-    }
-
-    @Override
     public void deleteById(int id) throws SQLException {
         try(Connection connection = ConexionSQLITE.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement(
@@ -147,7 +137,7 @@ public class AlumnosRepository implements Repository<AlumnosEntity> {
     public void updateAge(int id, int newAge) throws SQLException{
         try (Connection connection = ConexionSQLITE.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement(
-                ("UPDATE alumnos SET age = ? WHERE id = ?"))){
+                ("UPDATE alumnos SET edad = ? WHERE id = ?"))){
             preparedStatement.setInt(1,newAge);
             preparedStatement.setInt(2,id);
             preparedStatement.executeUpdate();

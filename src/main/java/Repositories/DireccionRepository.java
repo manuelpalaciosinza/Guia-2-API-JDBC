@@ -59,16 +59,6 @@ public class DireccionRepository implements Repository<DireccionEntity>{
     }
 
     @Override
-    public void delete(DireccionEntity direccionEntity) throws SQLException {
-        try(Connection connection = ConexionSQLITE.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(
-                    "DELETE FROM alumnos WHERE id = ?")){
-            preparedStatement.setInt(1,direccionEntity.getId());
-            preparedStatement.executeUpdate();
-        }
-    }
-
-    @Override
     public void deleteById(int id) throws SQLException {
         try(Connection connection = ConexionSQLITE.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(
@@ -77,6 +67,16 @@ public class DireccionRepository implements Repository<DireccionEntity>{
             preparedStatement.executeUpdate();
         }
     }
+
+    public void deleteByIdAlumno (int id_alumno) throws SQLException {
+        try(Connection connection = ConexionSQLITE.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    "DELETE FROM direcciones WHERE alumno_id = ?")){
+            preparedStatement.setInt(1,id_alumno);
+            preparedStatement.executeUpdate();
+        }
+    }
+
 
     @Override
     public int count() throws SQLException {

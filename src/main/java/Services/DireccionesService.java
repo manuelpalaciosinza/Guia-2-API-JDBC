@@ -57,10 +57,18 @@ public class DireccionesService {
         return listaDirecciones.toString();
     }
 
-    public void eliminarDireccion (DireccionEntity direccion) throws SQLException{
-        if (alumnosRepository.countById(direccion.getId()) == 0){
+    public void eliminarDireccion (int id) throws SQLException{
+        if (direccionRepository.countById(id) == 0){
             throw new SQLException("La direccion ingresada no existe en la base de datos");
         }
-        direccionRepository.delete(direccion);
+        direccionRepository.deleteById(id);
     }
+
+    public void eliminarDireccionConIdAlumno (int id_alumno) throws SQLException{
+        if (alumnosRepository.countById(id_alumno) == 0){
+            throw new SQLException("El alumno ingresado no existe en la base de datos");
+        }
+        direccionRepository.deleteByIdAlumno(id_alumno);
+    }
+
 }
